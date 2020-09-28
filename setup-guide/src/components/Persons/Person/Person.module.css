@@ -1,4 +1,6 @@
 .Person {
+  background-color: rgb(32, 31, 31);
+  color: rgba(255, 253, 225, 0.863);
   width: 40%;
   margin: 1rem auto;
   padding: 1rem;

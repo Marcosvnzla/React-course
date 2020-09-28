@@ -1,0 +1,30 @@
+:global .global { /* applies style globally */
+  font-size: 16px;
+}
+
+.App {
+  text-align: center;
+}
+
+.Button {
+  background-color: green;
+  color: white;
+  font: inherit;
+  border: 1px solid blue;
+  padding: 8px;
+  cursor: pointer;
+}
+
+.Button:hover {
+  background-color: lightgreen;
+  color: black;
+}
+
+.Button.alt {
+  background-color: red;
+}
+
+.Button.alt:hover {
+  background-color: salmon;
+  color: black;
+}

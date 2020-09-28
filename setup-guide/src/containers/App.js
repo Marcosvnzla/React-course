@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import './App.css';
-import Person from './Person/Person';
+import styles from './App.module.css';
+import Persons from '../components/Persons/Persons';
+import Cockpit from '../components/Cockpit/Cockpit';
 
 class App extends Component {
 
@@ -44,46 +45,26 @@ class App extends Component {
   }
 
   render() {
-    const style = {
-      backgroundColor: 'green',
-      color: 'white',
-      font: 'inherit',
-      border: '1px solid blue',
-      padding: '8px',
-      cursor: 'pointer',
-    }
-
-    const classes = [];
-    if (this.state.persons.length <= 2) {
-      classes.push('red');
-    }
-    if (this.state.persons.length <= 1) {
-      classes.push('bold');
-    }
+    const buttonClasses = [styles.Button];
 
     let persons = null;
     if (this.state.showPersons) {
       persons = (
-        <div>
-          {this.state.persons.map((person, index) => {
-            return <Person 
-              click={this.deletePerson.bind(this, index)}
-              changedName={event => this.changeName(event, person.id)}
-              key={person.id}
-              name={person.name} 
-              age={person.age} />
-          })}
-        </div>
+        <Persons
+          changed={this.changeName}
+          clicked={this.deletePerson}
+          persons={this.state.persons} />
       );
+      buttonClasses.push(styles.alt);
     }
 
     return (
-      <div className="App">
-        <h1>I'm a React app!</h1>
-        <p className={classes.join(' ')}>Dinamically added classes</p>
-        <button 
-          style={style}
-          onClick={() => this.toggleNames()}>Toggle Persons</button>
+      <div className={styles.App}> {/*styles.['App'] alternative*/}
+      <Cockpit 
+        title={this.props.appTitle}
+        buttonStyles={buttonClasses}
+        clicked={this.toggleNames}
+        personsLength={this.state.persons.length} /> 
         {persons}
       </div>
     );
