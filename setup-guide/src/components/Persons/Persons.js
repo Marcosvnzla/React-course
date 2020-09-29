@@ -1,18 +1,19 @@
-import React, { Component } from 'react';
-import Person from './Person/Person';
+import React, { Component } from "react";
+import Person from "./Person/Person";
 
-class Persons extends Component{
+class Persons extends Component {
   render() {
-    return(
-      this.props.persons.map((person, index) => {
-        return <Person 
+    return this.props.persons.map((person, index) => {
+      return (
+        <Person
           click={() => this.props.clicked(index)}
-          changedName={event => this.props.changed(event, person.id)}
+          changedName={(event) => this.props.changed(event, person.id)}
           key={person.id}
-          name={person.name} 
-          age={person.age} />
-      })
-    );
+          name={person.name}
+          age={person.age}
+        />
+      );
+    });
   }
 }
 
