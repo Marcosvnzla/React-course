@@ -1,14 +1,16 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import styles from './Cockpit.module.css';
+import AuthContext from '../../context/auth-context';
 
 const cockpit = (props) => {
-    const classes = [];
-    if (props.personsLength <= 2) {
-      classes.push(styles.red);
-    }
-    if (props.personsLength <= 1) {
-      classes.push(styles.bold);
-    }
+  const context = useContext(AuthContext);
+  const classes = [];
+  if (props.personsLength <= 2) {
+    classes.push(styles.red);
+  }
+  if (props.personsLength <= 1) {
+    classes.push(styles.bold);
+  }
 
   return(
     <div>
@@ -18,6 +20,7 @@ const cockpit = (props) => {
         className={props.buttonStyles.join(' ')}
         onClick={props.clicked}>Toggle Persons
       </button>
+      <button onClick={context.login}>Log in</button>
     </div>
   );
 };
