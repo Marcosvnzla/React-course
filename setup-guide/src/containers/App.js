@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import styles from "./App.module.css";
 import Persons from "../components/Persons/Persons";
 import Cockpit from "../components/Cockpit/Cockpit";
+import AuthContext from "../context/auth-context";
 
 class App extends Component {
   generateId = () => {
@@ -18,6 +19,7 @@ class App extends Component {
       { id: this.generateId(), name: "Marcos", age: "24" },
     ],
     showPersons: false,
+    authenticated: false,
   };
 
   changeName = (event, id) => {
@@ -45,6 +47,10 @@ class App extends Component {
     this.setState({ persons: persons });
   };
 
+  loginHandler = () => {
+    this.setState({ authenticated: true });
+  };
+
   render() {
     const buttonClasses = [styles.Button];
 
@@ -54,6 +60,7 @@ class App extends Component {
         <Persons
           changed={this.changeName}
           clicked={this.deletePerson}
+          isAuthenticated={this.state.authenticated}
           persons={this.state.persons}
         />
       );
@@ -64,13 +71,20 @@ class App extends Component {
       <div className={styles.App}>
         {" "}
         {/*styles.['App'] alternative*/}
-        <Cockpit
-          title={this.props.appTitle}
-          buttonStyles={buttonClasses}
-          clicked={this.toggleNames}
-          personsLength={this.state.persons.length}
-        />
-        {persons}
+        <AuthContext.Provider
+          value={{
+            authenticated: this.state.authenticated,
+            login: this.loginHandler,
+          }}
+        >
+          <Cockpit
+            title={this.props.appTitle}
+            buttonStyles={buttonClasses}
+            clicked={this.toggleNames}
+            personsLength={this.state.persons.length}
+          />
+          {persons}
+        </AuthContext.Provider>
       </div>
     );
   }

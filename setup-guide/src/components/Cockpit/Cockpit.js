@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useContext } from "react";
 import styles from "./Cockpit.module.css";
+import AuthContext from "../../context/auth-context";
 
 const cockpit = (props) => {
+  const context = useContext(AuthContext);
   const classes = [];
   if (props.personsLength <= 2) {
     classes.push(styles.red);
