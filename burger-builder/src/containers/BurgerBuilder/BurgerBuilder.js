@@ -76,6 +76,10 @@ class BurgerBuilder extends Component {
     this.setState({showModal: true});
   };
 
+  cancelOrder = () => {
+    this.setState({showModal: false});
+  };
+
   render() {
     const disabledInfo = {
       ...this.state.ingredients
@@ -87,7 +91,7 @@ class BurgerBuilder extends Component {
 
     return(
       <Fragment>
-        <Modal show={this.state.showModal}>
+        <Modal show={this.state.showModal} hideBackdrop={this.cancelOrder}>
           <OrderSummary ingredients={this.state.ingredients} />
         </Modal>
         <Burger ingredients={this.state.ingredients} />
