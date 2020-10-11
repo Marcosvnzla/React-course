@@ -80,6 +80,10 @@ class BurgerBuilder extends Component {
     this.setState({showModal: false});
   };
 
+  continueOrder = () => {
+    alert('You continued!');
+  };
+
   render() {
     const disabledInfo = {
       ...this.state.ingredients
@@ -92,7 +96,12 @@ class BurgerBuilder extends Component {
     return(
       <Fragment>
         <Modal show={this.state.showModal} hideBackdrop={this.cancelOrder}>
-          <OrderSummary ingredients={this.state.ingredients} />
+          <OrderSummary 
+            total={this.state.totalPrice}
+            btnCancel={this.cancelOrder} 
+            btnSuccess={this.continueOrder} 
+            ingredients={this.state.ingredients} 
+          />
         </Modal>
         <Burger ingredients={this.state.ingredients} />
         <BuildControls 
@@ -101,7 +110,8 @@ class BurgerBuilder extends Component {
           price={this.state.totalPrice}
           disabled={disabledInfo}
           removeMethod={this.removeIngredient}
-          addMethod={this.addIngredient} />
+          addMethod={this.addIngredient}
+        />
       </Fragment>
     );
   }
