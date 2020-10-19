@@ -3,6 +3,9 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
+import axios from 'axios';
+
+axios.defaults.baseURL = 'https://react-my-burger-ae98d.firebaseio.com';
 
 ReactDOM.render(
   <React.StrictMode>
