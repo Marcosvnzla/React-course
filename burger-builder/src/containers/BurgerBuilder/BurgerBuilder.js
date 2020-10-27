@@ -16,16 +16,22 @@ const INGREDIENT_PRICES = {
 
 class BurgerBuilder extends Component {
   state = {
-    ingredients: {
-      salad: 0,
-      bacon: 0,
-      cheese: 0,
-      meat: 0
-    },
+    ingredients: null,
     totalPrice: 4,
     purchasable: false,
     showModal: false,
-    loadingOrder: false
+    loadingOrder: false,
+    error: false
+  }
+
+  componentDidMount () {
+    axios.get('https://react-my-burger-ae98d.firebaseio.com/ingredients.json')
+    .then(response => {
+      this.setState({ingredients: response.data});
+    })
+    .catch(error => {
+      this.setState({error: true});
+    });
   }
 
   setPurchasable = (ingredients) => {
@@ -120,12 +126,33 @@ class BurgerBuilder extends Component {
       disabledInfo[key] = disabledInfo[key] <= 0;
     }
 
-    let orderSummary = <OrderSummary 
+    let orderSummary = null;
+
+
+    let burger =this.state.error ? <p>Ingredients can't be loaded</p> : <Spinner />;
+
+    if (this.state.ingredients) {
+      burger = (
+        <Fragment>
+          <Burger ingredients={this.state.ingredients} />
+          <BuildControls 
+            orderClicked={this.showModal}
+            purchasable={this.state.purchasable}
+            price={this.state.totalPrice}
+            disabled={disabledInfo}
+            removeMethod={this.removeIngredient}
+            addMethod={this.addIngredient}
+          />
+        </Fragment>
+      );
+
+      orderSummary = <OrderSummary 
                           total={this.state.totalPrice}
                           btnCancel={this.cancelOrder} 
                           btnSuccess={this.continueOrder} 
                           ingredients={this.state.ingredients} 
-                        />
+                        />;
+    }
 
     if (this.state.loadingOrder) {
       orderSummary = <Spinner />;
@@ -136,15 +163,7 @@ class BurgerBuilder extends Component {
         <Modal show={this.state.showModal} hideBackdrop={this.cancelOrder}>
           {orderSummary}
         </Modal>
-        <Burger ingredients={this.state.ingredients} />
-        <BuildControls 
-          orderClicked={this.showModal}
-          purchasable={this.state.purchasable}
-          price={this.state.totalPrice}
-          disabled={disabledInfo}
-          removeMethod={this.removeIngredient}
-          addMethod={this.addIngredient}
-        />
+        {burger}
       </Fragment>
     );
   }
