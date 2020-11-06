@@ -10,8 +10,8 @@ const CheckoutSummary = (props) => {
       <div className={styles.burgerContainer}>
         <Burger ingredients={props.ingredients} />
       </div>
-      <Button btnType="Danger">Cancel</Button>
-      <Button btnType="Success">Continue</Button>
+      <Button clicked={props.onCancel} btnType="Danger">Cancel</Button>
+      <Button clicked={props.onContinue} btnType="Success">Continue</Button>
     </div>
   );
 }
