@@ -7,8 +7,58 @@ import Input from '../../../components/UI/Input/Input';
 
 class ContactData extends Component {
   state = {
-    formData: {},
+    formData: {
+      name: {
+        elementType: 'input',
+        elementConfig: {
+          name: 'name',
+          type: 'text',
+          placeholder: 'Your Name'
+        },
+        value: ''
+      },
+      email: {
+        elementType: 'input',
+        elementConfig: {
+          name: 'email',
+          type: 'email',
+          placeholder: 'Your e-mail'
+        },
+        value: ''
+      },
+      street: {
+        elementType: 'input',
+        elementConfig: {
+          name: 'street',
+          type: 'text',
+          placeholder: 'Your Street'
+        },
+        value: ''
+      },
+      deliveryMethod: {
+        elementType: 'select',
+        elementConfig: {
+          options: [
+            {value: 'fastest', displayValue: 'Fastest'},
+            {value: 'cheapest', displayValue: 'Cheapest'}
+          ]
+        },
+        value: ''
+      }
+    },
     loadingOrder: false
+  }
+
+  inputChanged = (event, elementId) => {
+    const updatedForm = {
+      ...this.state.formData
+    };
+    const updatedFormElement = {
+      ...updatedForm[elementId]
+    };
+    updatedFormElement.value = event.target.value;
+    updatedForm[elementId] = updatedFormElement;
+    this.setState({formData: updatedForm});
   }
 
   sendOrder = (event) => {
@@ -16,17 +66,7 @@ class ContactData extends Component {
 
     const order = {
       ingredients: this.props.ingredients,
-      price: this.props.price,
-      customer: {
-        name: 'userName',
-        address: {
-          street: 'userStreet',
-          zipCode: '1234',
-          additionalInfo: 'addtitionalInfo'
-        },
-        email: 'username@test.com'
-      },
-      paymentMethod: 'credit'
+      price: this.props.price
     };
 
     axios.post('/orders.json', order)
@@ -44,11 +84,21 @@ class ContactData extends Component {
   }
 
   render() {
+    const formArray = [];
+    for (let key in this.state.formData) {
+      formArray.push({
+        id: key,
+        config: this.state.formData[key]
+      });
+    }
+
+    const formElementList = formArray.map(formElement => {
+      return <Input changed={(event) => this.inputChanged(event, formElement.id)} key={formElement.id} elementType={formElement.config.elementType} elementConfig={formElement.config.elementConfig} value={formElement.value} />
+    });
+
     let form = (
       <form>
-        <Input inputtype="input" type="text" name="name" placeholder="Your Name" />
-        <Input inputtype="input" type="email" name="email" placeholder="Your Email" />
-        <Input inputtype="input" type="text" name="street" placeholder="Street" />
+        {formElementList}
         <Button btnType='Success' clicked={this.sendOrder} >Order Now!</Button>
       </form>
     );      
