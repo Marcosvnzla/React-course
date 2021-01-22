@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import axios from 'axios';
+import { connect } from 'react-redux';
 import styles from './ContactData.module.css';
 import Button from '../../../components/UI/Button/Button';
 import Spinner from '../../../components/UI/Spinner/Spinner';
 import Input from '../../../components/UI/Input/Input';
+import { purchaseBurgerStart } from '../../../store/actions';
 
 class ContactData extends Component {
   state = {
@@ -109,25 +110,15 @@ class ContactData extends Component {
   }
 
   sendOrder = (event) => {
-    this.setState({loadingOrder: true});
+    event.preventDefault();
 
     const order = {
-      ingredients: this.props.ingredients,
-      price: this.props.price
+      ingredients: this.props.ings,
+      price: this.props.totPrice,
+      formData: this.state.formData
     };
 
-    axios.post('/orders.json', order)
-    .then(response => {
-      console.log(response);
-      this.setState({loadingOrder: false});
-      this.props.history.push('/');
-    })
-    .catch(error => {
-      alert('Something went wrong :( please try again');
-      this.setState({loadingOrder: false});
-    });
-
-    event.preventDefault();
+    this.props.onOrderBurger(order);
   }
 
   render() {
@@ -149,7 +140,7 @@ class ContactData extends Component {
         <Button disabled={!this.state.formIsValid} btnType='Success' clicked={this.sendOrder} >Order Now!</Button>
       </form>
     );      
-    if (this.state.loadingOrder) {
+    if (this.props.loading) {
       form = <Spinner />
     }
 
@@ -162,4 +153,18 @@ class ContactData extends Component {
   }
 }
 
-export default ContactData;
+const mapStateToProps = state => {
+  return {
+    ings: state.ingredients,
+    totPrice: state.totalPrice,
+    loading: state.orderLoading
+  }
+}
+
+const mapDispatchToProps = dispatch => {
+  return {
+    onOrderBurger: (orderData) => dispatch(purchaseBurgerStart(orderData)),
+  }
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(ContactData);
